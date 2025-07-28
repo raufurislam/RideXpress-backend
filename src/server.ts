@@ -4,8 +4,6 @@ import mongoose from "mongoose";
 import app from "./app";
 import { envVars } from "./app/config/env";
 
-// let myAge;
-
 let server: Server;
 
 const startServer = async () => {
@@ -66,12 +64,3 @@ process.on("SIGINT", () => {
   }
   process.exit(1);
 });
-
-// Promise.reject(new Error("I forgot to catch this promise")); // unhandled rejection error
-// throw new Error("I forgot to handle this local error"); // uncaught exception error...
-
-/**
- * unhandled rejection error
- * uncaught rejection error
- * signal termination sigterm
- */
