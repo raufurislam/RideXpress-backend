@@ -1,3 +1,4 @@
+// user.validation.ts
 import z from "zod";
 import { IsActive, Role } from "./user.interface";
 

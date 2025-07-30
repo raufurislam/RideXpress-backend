@@ -1,3 +1,4 @@
+// user.route.ts
 import { Router } from "express";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createUserZodSchema } from "./user.validation";
