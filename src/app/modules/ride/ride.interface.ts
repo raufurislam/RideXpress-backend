@@ -17,7 +17,7 @@ interface IUser {
 }
 
 export enum VehicleType {
-  SEDAN = "SEDAN",
+  CAR = "SEDAN",
   SUV = "SUV",
   HATCHBACK = "HATCHBACK",
   MICROBUS = "MICROBUS",
