@@ -25,7 +25,6 @@ const credentialsLogin = catchAsync(
 
       const userTokens = await createUserTokens(user);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: pass, ...rest } = user.toObject();
 
       setAuthCookie(res, userTokens);
@@ -67,7 +66,7 @@ const getNewAccessToken = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
-      message: "New Access Token Retrived Successfully",
+      message: "New Access Token Retrieved Successfully",
       data: tokenInfo,
     });
   }
