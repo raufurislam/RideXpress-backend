@@ -10,6 +10,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { AuthServices } from "./auth.service";
 import { envVars } from "../../config/env";
+import { JwtPayload } from "jsonwebtoken";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -24,7 +25,6 @@ const credentialsLogin = catchAsync(
 
       const userTokens = await createUserTokens(user);
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: pass, ...rest } = user.toObject();
 
       setAuthCookie(res, userTokens);
@@ -66,7 +66,7 @@ const getNewAccessToken = catchAsync(
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
-      message: "New Access Token Retrived Successfully",
+      message: "New Access Token Retrieved Successfully",
       data: tokenInfo,
     });
   }
@@ -145,12 +145,60 @@ const googleCallbackController = catchAsync(
   }
 );
 
+const changePassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const newPassword = req.body.newPassword;
+    const oldPassword = req.body.oldPassword;
+    const decodedToken = req.user;
+
+    await AuthServices.changePassword(
+      oldPassword,
+      newPassword,
+      decodedToken as JwtPayload
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Password Changed Successfully",
+      data: null,
+    });
+  }
+);
+
+const resetPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Password Changed Successfully",
+      data: null,
+    });
+  }
+);
+
+const setPassword = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const { password } = req.body;
+
+    await AuthServices.setPassword(decodedToken.userId, password);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Password Changed Successfully",
+      data: null,
+    });
+  }
+);
+
 export const AuthControllers = {
   credentialsLogin,
   getNewAccessToken,
   logout,
-  // changePassword,
-  //   resetPassword,
-  //   setPassword,
+  changePassword,
+  resetPassword,
+  setPassword,
   googleCallbackController,
 };
