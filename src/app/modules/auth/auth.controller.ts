@@ -9,6 +9,7 @@ import { setAuthCookie } from "../../utils/setCookie";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { AuthServices } from "./auth.service";
+import { envVars } from "../../config/env";
 
 const credentialsLogin = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -114,6 +115,36 @@ const logout = catchAsync(
 //   }
 // );
 
+const googleCallbackController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let redirectTo = req.query.state ? (req.query.state as string) : "";
+
+    if (redirectTo.startsWith("/")) {
+      redirectTo = redirectTo.slice(1);
+    }
+
+    // /booking => booking , => "/" => ""
+    const user = req.user;
+
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "User Not Found");
+    }
+
+    const tokenInfo = createUserTokens(user);
+
+    setAuthCookie(res, tokenInfo);
+
+    // sendResponse(res, {
+    //     success: true,
+    //     statusCode: httpStatus.OK,
+    //     message: "Password Changed Successfully",
+    //     data: null,
+    // })
+
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`);
+  }
+);
+
 export const AuthControllers = {
   credentialsLogin,
   getNewAccessToken,
@@ -121,5 +152,5 @@ export const AuthControllers = {
   // changePassword,
   //   resetPassword,
   //   setPassword,
-  //   googleCallbackController,
+  googleCallbackController,
 };
