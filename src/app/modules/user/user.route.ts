@@ -18,5 +18,11 @@ router.get(
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   UserControllers.getAllUsers
 );
+router.get("/me", checkAuth(...Object.values(Role)), UserControllers.getMe);
+router.get(
+  "/:id",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  UserControllers.getSingleUser
+);
 
 export const UserRoutes = router;
