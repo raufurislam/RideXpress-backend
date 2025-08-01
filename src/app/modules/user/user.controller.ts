@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // user.controller.ts
 import { NextFunction, Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
@@ -24,9 +25,30 @@ const createUser = catchAsync(
   }
 );
 
+const getAllUsers = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+    const result = await UserServices.getAllUsers(
+      query as Record<string, string>
+    );
+    // res.status(httpStatus.OK).json({
+    //     success: true,
+    //     message: "All Users Retrieved Successfully",
+    //     data: users
+    // })
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.CREATED,
+      message: "All Users Retrieved Successfully",
+      data: result.data,
+      meta: result.meta,
+    });
+  }
+);
+
 export const UserControllers = {
   createUser,
-  //   getAllUsers,
+  getAllUsers,
   //   getSingleUser,
   //   updateUser,
   //   getMe,
