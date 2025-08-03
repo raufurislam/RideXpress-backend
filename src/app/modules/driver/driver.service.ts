@@ -1,1 +1,77 @@
 // driver.service.ts
+import { JwtPayload } from "jsonwebtoken";
+import { IUser, Role } from "../user/user.interface";
+import AppError from "../../errorHelpers/AppError";
+import { Driver } from "./driver.model";
+import httpStatus from "http-status-codes";
+import { User } from "../user/user.model";
+import { Availability, DRIVER_STATUS } from "./driver.interface";
+
+const applyForDriver = async (
+  payload: Partial<IUser>,
+  decodedToken: JwtPayload
+) => {
+  if (decodedToken.role !== Role.RIDER) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "You are not authorized to apply for driver"
+    );
+  }
+
+  const isUserExist = await User.findById(decodedToken.userId);
+
+  // checking is user exist or not
+  if (!isUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // checking authorized user or not
+  if (isUserExist._id.toString() !== decodedToken.userId) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You're not authorized to perform this action"
+    );
+  }
+
+  // checking address provided or not
+  if (!isUserExist.address) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Please update your address before applying as a driver."
+    );
+  }
+
+  // checking user already submit a driver application
+  const isApplicationExist = await Driver.findOne({
+    driver: decodedToken.userId,
+  });
+  if (isApplicationExist) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "You have already submitted a driver application"
+    );
+  }
+
+  // checking user already are in driver role
+  if (isUserExist.role === Role.DRIVER) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "You have already registered as driver"
+    );
+  }
+
+  // create new driver application
+  const driver = await Driver.create({
+    ...payload,
+    userId: decodedToken.userId,
+    status: DRIVER_STATUS.PENDING,
+    availability: Availability.OFFLINE,
+    appliedAt: new Date(),
+  });
+
+  return driver;
+};
+
+export const DriverService = {
+  applyForDriver,
+};

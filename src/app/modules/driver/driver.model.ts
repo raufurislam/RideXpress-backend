@@ -1,24 +1,33 @@
 // driver.model.ts
-
-import { model, Schema } from "mongoose";
-import { DRIVER_STATUS, IDriver } from "./driver.interface";
+import { Schema, model } from "mongoose";
+import { IDriver, Availability, DRIVER_STATUS } from "./driver.interface";
+import { VEHICLE_TYPE } from "../ride/ride.interface";
 
 const driverSchema = new Schema<IDriver>(
   {
     userId: {
-      // type: Schema.Types.ObjectId,
-      // // ref: "User",
-      // required: true,
-      // unique: true,
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
     },
-    vehicleType: { type: String, required: true },
+    vehicleType: {
+      type: String,
+      enum: Object.values(VEHICLE_TYPE),
+      required: true,
+    },
     vehicleModel: { type: String, required: true },
-    licenseNumber: { type: String, required: true },
     vehicleNumber: { type: String, required: true },
+    licenseNumber: { type: String, required: true },
     status: {
       type: String,
-      enum: DRIVER_STATUS,
+      enum: Object.values(DRIVER_STATUS),
       default: DRIVER_STATUS.PENDING,
+    },
+    availability: {
+      type: String,
+      enum: Object.values(Availability),
+      default: Availability.OFFLINE,
     },
     appliedAt: { type: Date, default: Date.now },
     approvedAt: { type: Date },
