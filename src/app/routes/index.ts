@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserRoutes } from "../modules/user/user.route";
 import { AuthRoute } from "../modules/auth/auth.route";
-import { DriverRoute } from "../modules/driverApplications/driver.route";
+import { DriverRoute } from "../modules/driver/driver.route";
 
 export const router = Router();
 
