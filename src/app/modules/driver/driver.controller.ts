@@ -21,6 +21,25 @@ const applyForDriver = catchAsync(
   }
 );
 
+const getAllDriverApplication = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const query = req.query as Record<string, string>;
+
+    const result = await DriverService.getAllDriverApplication(
+      decodedToken.userId,
+      query
+    );
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      success: true,
+      message: "Your application was successfully sent",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
+  getAllDriverApplication,
 };

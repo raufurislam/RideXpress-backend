@@ -6,6 +6,8 @@ import { Driver } from "./driver.model";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model";
 import { Availability, DRIVER_STATUS } from "./driver.interface";
+import { QueryBuilder } from "./../../utils/QueryBuilder";
+import { driverSearchableFields } from "./driver.constant";
 
 const applyForDriver = async (
   payload: Partial<IUser>,
@@ -72,6 +74,36 @@ const applyForDriver = async (
   return driver;
 };
 
+const getAllDriverApplication = async (
+  userId: string,
+  query: Record<string, string>
+) => {
+  const isUserExist = User.findById(userId);
+  if (!isUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const queryBuilder = new QueryBuilder(Driver.find(), query);
+
+  const driverApplication = await queryBuilder
+    .search(driverSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    driverApplication.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
+};
+
 export const DriverService = {
   applyForDriver,
+  getAllDriverApplication,
 };

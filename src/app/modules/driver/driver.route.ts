@@ -15,4 +15,10 @@ router.post(
   DriverController.applyForDriver
 );
 
+router.get(
+  "/driver-application",
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  DriverController.getAllDriverApplication
+);
+
 export const DriverRoute = router;
