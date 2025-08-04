@@ -8,6 +8,7 @@ import { User } from "../user/user.model";
 import { Availability, DRIVER_STATUS } from "./driver.interface";
 import { QueryBuilder } from "./../../utils/QueryBuilder";
 import { driverSearchableFields } from "./driver.constant";
+import mongoose from "mongoose";
 
 const applyForDriver = async (
   payload: Partial<IUser>,
@@ -103,7 +104,49 @@ const getAllDriverApplication = async (
   };
 };
 
+const updateDriver = async (driverId: string, driverStatus: DRIVER_STATUS) => {
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const driver = await Driver.findById(driverId).session(session);
+    if (!driver) {
+      throw new AppError(httpStatus.NOT_FOUND, "Driver application not found");
+    }
+
+    if (driver.status === driverStatus) {
+      throw new AppError(httpStatus.BAD_REQUEST, `Already ${driverStatus}`);
+    }
+
+    driver.status = driverStatus;
+
+    if (driverStatus === DRIVER_STATUS.APPROVED) {
+      driver.approvedAt = new Date();
+
+      // ✅ Update the user's role to DRIVER
+      await User.findByIdAndUpdate(
+        driver.userId,
+        { role: Role.DRIVER },
+        { session }
+      );
+    }
+
+    await driver.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return driver;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
 export const DriverService = {
   applyForDriver,
   getAllDriverApplication,
+  updateDriver,
 };

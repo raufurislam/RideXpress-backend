@@ -39,7 +39,24 @@ const getAllDriverApplication = catchAsync(
   }
 );
 
+const updateDriver = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { driverId } = req.params;
+    const { driverStatus } = req.body; // ✅ FIX: use driverStatus not status
+
+    const result = await DriverService.updateDriver(driverId, driverStatus);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: `Driver status updated to ${driverStatus}`,
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
   getAllDriverApplication,
+  updateDriver,
 };

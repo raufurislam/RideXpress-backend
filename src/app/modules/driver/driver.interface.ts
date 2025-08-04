@@ -6,7 +6,7 @@ export enum DRIVER_STATUS {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
-  SUSPEND = "SUSPEND ",
+  SUSPEND = "SUSPEND",
 }
 
 export enum Availability {
