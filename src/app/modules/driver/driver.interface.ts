@@ -9,9 +9,10 @@ export enum DRIVER_STATUS {
   SUSPEND = "SUSPEND",
 }
 
-export enum Availability {
-  ONLINE = "ONLINE",
-  OFFLINE = "OFFLINE",
+export enum AVAILABILITY {
+  AVAILABLE = "AVAILABLE",
+  UNAVAILABLE = "UNAVAILABLE",
+  ON_TRIP = "ON_TRIP",
 }
 
 export interface IDriver {
@@ -21,7 +22,7 @@ export interface IDriver {
   vehicleNumber: string;
   licenseNumber: string;
   status: DRIVER_STATUS;
-  availability: Availability;
+  availability: AVAILABILITY;
   appliedAt: Date;
   approvedAt?: Date;
 }

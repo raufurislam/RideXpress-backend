@@ -5,6 +5,7 @@ import { Role } from "../user/user.interface";
 import { validateRequest } from "../../middlewares/validateRequest";
 import {
   driverApplicationZodSchema,
+  updateAvailabilityZodSchema,
   updateDriverApplicationZodSchema,
 } from "./driver.validation";
 import { DriverController } from "./driver.controller";
@@ -25,10 +26,17 @@ router.get(
 );
 
 router.patch(
-  "/driver-application/:driverId",
+  "/driver-application/:driverId/status",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateDriverApplicationZodSchema),
   DriverController.updateDriver
+);
+
+router.patch(
+  "/driver-application/update-availability",
+  checkAuth(Role.DRIVER),
+  validateRequest(updateAvailabilityZodSchema),
+  DriverController.updateAvailability
 );
 
 export const DriverRoute = router;

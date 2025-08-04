@@ -1,6 +1,6 @@
 // driver.model.ts
 import { Schema, model } from "mongoose";
-import { IDriver, Availability, DRIVER_STATUS } from "./driver.interface";
+import { IDriver, AVAILABILITY, DRIVER_STATUS } from "./driver.interface";
 import { VEHICLE_TYPE } from "../ride/ride.interface";
 
 const driverSchema = new Schema<IDriver>(
@@ -26,8 +26,8 @@ const driverSchema = new Schema<IDriver>(
     },
     availability: {
       type: String,
-      enum: Object.values(Availability),
-      default: Availability.OFFLINE,
+      enum: Object.values(AVAILABILITY),
+      default: AVAILABILITY.UNAVAILABLE,
     },
     appliedAt: { type: Date, default: Date.now },
     approvedAt: { type: Date },

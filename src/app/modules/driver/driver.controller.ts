@@ -55,8 +55,25 @@ const updateDriver = catchAsync(
   }
 );
 
+const updateAvailability = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+    const { availability } = req.body;
+
+    const result = await DriverService.updateAvailability(user, availability);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Driver availability updated successfully",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
+  updateAvailability,
 };

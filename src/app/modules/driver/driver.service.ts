@@ -5,7 +5,7 @@ import AppError from "../../errorHelpers/AppError";
 import { Driver } from "./driver.model";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model";
-import { Availability, DRIVER_STATUS } from "./driver.interface";
+import { AVAILABILITY, DRIVER_STATUS } from "./driver.interface";
 import { QueryBuilder } from "./../../utils/QueryBuilder";
 import { driverSearchableFields } from "./driver.constant";
 import mongoose from "mongoose";
@@ -68,7 +68,7 @@ const applyForDriver = async (
     ...payload,
     userId: decodedToken.userId,
     status: DRIVER_STATUS.PENDING,
-    availability: Availability.OFFLINE,
+    availability: AVAILABILITY.UNAVAILABLE,
     appliedAt: new Date(),
   });
 
@@ -145,8 +145,38 @@ const updateDriver = async (driverId: string, driverStatus: DRIVER_STATUS) => {
   }
 };
 
+const updateAvailability = async (
+  user: JwtPayload,
+  availability: AVAILABILITY
+) => {
+  if (
+    ![AVAILABILITY.AVAILABLE, AVAILABILITY.UNAVAILABLE].includes(availability)
+  ) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid availability change");
+  }
+
+  const driver = await Driver.findOne({ userId: user.userId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+
+  if (driver.status !== DRIVER_STATUS.APPROVED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Only approved drivers can update availability"
+    );
+  }
+
+  driver.availability = availability;
+  await driver.save();
+
+  return driver;
+};
+
 export const DriverService = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
+  updateAvailability,
 };

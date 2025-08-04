@@ -1,6 +1,6 @@
 // driver.validation.ts
 import z from "zod";
-import { DRIVER_STATUS } from "./driver.interface";
+import { AVAILABILITY, DRIVER_STATUS } from "./driver.interface";
 
 export const driverApplicationZodSchema = z.object({
   vehicleType: z.string({ required_error: "Vehicle type is required" }),
@@ -9,10 +9,16 @@ export const driverApplicationZodSchema = z.object({
   vehicleNumber: z.string({ required_error: "Vehicle number is required" }),
 });
 
-// For updating driver status (admin action)
 export const updateDriverApplicationZodSchema = z.object({
   driverStatus: z.nativeEnum(DRIVER_STATUS, {
     required_error: "Driver status is required",
     invalid_type_error: "Invalid driver status",
+  }),
+});
+
+export const updateAvailabilityZodSchema = z.object({
+  availability: z.nativeEnum(AVAILABILITY, {
+    required_error: "Availability status is required",
+    invalid_type_error: "Invalid availability value",
   }),
 });
