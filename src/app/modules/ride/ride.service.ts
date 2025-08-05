@@ -9,6 +9,8 @@ import { User } from "../user/user.model";
 import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
 import { ACTIVE_RIDE_STATUSES } from "./rideStatus";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { rideSearchableFields } from "./ride.constant";
 
 const requestRide = async (payload: Partial<IRide>, userId: string) => {
   const isUserExist = await User.findById(userId);
@@ -52,7 +54,7 @@ const requestRide = async (payload: Partial<IRide>, userId: string) => {
     riderId: new Types.ObjectId(userId),
     pickupLocation,
     destinationLocation,
-    distance, // ✅ saving in DB
+    distance,
     vehicleType,
     fare,
     status: Status.REQUESTED,
@@ -64,6 +66,33 @@ const requestRide = async (payload: Partial<IRide>, userId: string) => {
   return ride;
 };
 
+const getAllRides = async (userId: string, query: Record<string, string>) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const queryBuilder = new QueryBuilder(Ride.find(), query);
+
+  const ridesQuery = queryBuilder
+    .search(rideSearchableFields)
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    ridesQuery.build(),
+    queryBuilder.getMeta(),
+  ]);
+
+  return {
+    data,
+    meta,
+  };
+};
+
 export const RideService = {
   requestRide,
+  getAllRides,
 };
