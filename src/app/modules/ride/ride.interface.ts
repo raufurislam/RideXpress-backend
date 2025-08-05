@@ -6,7 +6,7 @@ export enum VEHICLE_TYPE {
   BIKE = "BIKE",
 }
 
-export enum Status {
+export enum RideStatus {
   REQUESTED = "REQUESTED",
   ACCEPTED = "ACCEPTED",
   REJECTED = "REJECTED",
@@ -37,7 +37,7 @@ export interface IRide {
   pickupLocation: IRideLocation;
   destinationLocation: IRideLocation;
   distance: number;
-  status: Status;
+  status: RideStatus;
   fare?: number;
   vehicleType: VEHICLE_TYPE;
   timestamps: IRideTimestamps;

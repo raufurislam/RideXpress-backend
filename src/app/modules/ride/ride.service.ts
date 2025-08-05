@@ -2,15 +2,17 @@
 
 import { Types } from "mongoose";
 import { calculateFare } from "../../utils/calculateFare";
-import { IRide, Status } from "./ride.interface";
+import { IRide, RideStatus } from "./ride.interface";
 import { Ride } from "./ride.model";
 import { calculateDistanceInKm } from "../../utils/calculateDistanceInKm";
 import { User } from "../user/user.model";
 import httpStatus from "http-status-codes";
 import AppError from "../../errorHelpers/AppError";
-import { ACTIVE_RIDE_STATUSES } from "./rideStatus";
+import { ACTIVE_RIDE_STATUSES, rideStatusFlow } from "./rideStatus";
 import { QueryBuilder } from "../../utils/QueryBuilder";
 import { rideSearchableFields } from "./ride.constant";
+import { AVAILABILITY, DRIVER_STATUS } from "../driver/driver.interface";
+import { Driver } from "../driver/driver.model";
 
 const requestRide = async (payload: Partial<IRide>, userId: string) => {
   const isUserExist = await User.findById(userId);
@@ -57,7 +59,7 @@ const requestRide = async (payload: Partial<IRide>, userId: string) => {
     distance,
     vehicleType,
     fare,
-    status: Status.REQUESTED,
+    status: RideStatus.REQUESTED,
     timestamps: {
       requestedAt: new Date(),
     },
@@ -92,7 +94,151 @@ const getAllRides = async (userId: string, query: Record<string, string>) => {
   };
 };
 
+const updateRideStatus = async (
+  userId: string,
+  rideId: string,
+  newStatus: RideStatus
+) => {
+  const session = await Ride.startSession();
+
+  try {
+    session.startTransaction();
+
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
+
+    const ride = await Ride.findById(rideId);
+    if (!ride) {
+      throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
+    }
+
+    const driver = await Driver.findOne({ userId });
+
+    // Handle driver validation
+    if (
+      driver &&
+      [
+        DRIVER_STATUS.PENDING,
+        DRIVER_STATUS.REJECTED,
+        DRIVER_STATUS.SUSPEND,
+      ].includes(driver.status)
+    ) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Your driver status is '${driver.status}', you cannot update rides`
+      );
+    }
+
+    if (driver && driver.availability === AVAILABILITY.UNAVAILABLE) {
+      throw new AppError(httpStatus.BAD_REQUEST, "You are currently offline");
+    }
+
+    // Check for duplicate active rides
+    if (newStatus === RideStatus.ACCEPTED) {
+      const alreadyActiveRide = await Ride.findOne({
+        driverId: userId,
+        status: { $in: ACTIVE_RIDE_STATUSES },
+      });
+
+      if (alreadyActiveRide) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          "You already have an active ride"
+        );
+      }
+    }
+
+    if (newStatus === RideStatus.CANCELLED) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Drivers cannot cancel rides");
+    }
+
+    if (ride.status === RideStatus.CANCELLED) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Ride has already been cancelled"
+      );
+    }
+
+    // 🚦 Validate transition
+    const allowedNextStatuses = rideStatusFlow[ride.status];
+    if (!allowedNextStatuses.includes(newStatus)) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Invalid ride status transition from '${ride.status}' to '${newStatus}'`
+      );
+    }
+
+    // 🚨 Only assigned driver can modify an active ride
+    if (
+      ride.driverId &&
+      ride.driverId.toString() !== userId &&
+      [
+        RideStatus.ACCEPTED,
+        RideStatus.PICKED_UP,
+        RideStatus.IN_TRANSIT,
+      ].includes(ride.status)
+    ) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not assigned to this ride"
+      );
+    }
+
+    // ⏱ Timestamp field mapping
+    const now = new Date();
+    const timestampFieldMap: Record<RideStatus, keyof IRide["timestamps"]> = {
+      [RideStatus.ACCEPTED]: "acceptedAt",
+      [RideStatus.REJECTED]: "rejectedAt",
+      [RideStatus.PICKED_UP]: "pickedUpAt",
+      [RideStatus.IN_TRANSIT]: "in_transit",
+      [RideStatus.COMPLETED]: "completedAt",
+      [RideStatus.CANCELLED]: "cancelledAt",
+      [RideStatus.REQUESTED]: "requestedAt", // Not used here
+    };
+
+    const updateData: Partial<IRide> = {
+      status: newStatus,
+      timestamps: {
+        ...ride.timestamps,
+        [timestampFieldMap[newStatus]]: now,
+      },
+    };
+
+    // Assign driver if not yet assigned (on ACCEPT)
+    if (!ride.driverId && newStatus === RideStatus.ACCEPTED) {
+      updateData.driverId = new Types.ObjectId(userId);
+    }
+
+    // 👛 Add fare to driver earnings if ride is completed
+    if (newStatus === RideStatus.COMPLETED && ride.fare && driver) {
+      await Driver.updateOne(
+        { userId },
+        { $inc: { earnings: ride.fare } },
+        { session }
+      );
+    }
+
+    // Save ride update
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, updateData, {
+      new: true,
+      session,
+    });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return updatedRide;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
 export const RideService = {
   requestRide,
   getAllRides,
+  updateRideStatus,
 };

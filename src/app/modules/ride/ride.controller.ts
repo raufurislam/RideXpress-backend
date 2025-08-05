@@ -38,7 +38,28 @@ const getAllRides = catchAsync(
   }
 );
 
+const updateRideStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { rideStatus } = req.body;
+    const { rideId } = req.params;
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.updateRideStatus(
+      decodedToken.userId,
+      rideId,
+      rideStatus
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: `Ride status has been updated to '${result?.status}' successfully`,
+      data: result,
+    });
+  }
+);
+
 export const RideController = {
   requestRide,
   getAllRides,
+  updateRideStatus,
 };

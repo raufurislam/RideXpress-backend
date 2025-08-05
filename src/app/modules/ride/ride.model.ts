@@ -1,6 +1,6 @@
 // ride.model.ts
 import { Schema, model } from "mongoose";
-import { IRide, Status, VEHICLE_TYPE } from "./ride.interface";
+import { IRide, RideStatus, VEHICLE_TYPE } from "./ride.interface";
 
 const rideLocationSchema = new Schema(
   {
@@ -40,8 +40,8 @@ const rideSchema = new Schema<IRide>(
 
     status: {
       type: String,
-      enum: Object.values(Status),
-      default: Status.REQUESTED,
+      enum: Object.values(RideStatus),
+      default: RideStatus.REQUESTED,
     },
 
     cancellationReason: { type: String },

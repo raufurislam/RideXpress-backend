@@ -21,4 +21,10 @@ router.get(
   RideController.getAllRides
 );
 
+router.patch(
+  "/rideStatus/:rideId",
+  checkAuth(Role.DRIVER),
+  RideController.updateRideStatus
+);
+
 export const RideRoute = router;
