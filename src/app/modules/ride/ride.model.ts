@@ -36,6 +36,8 @@ const rideSchema = new Schema<IRide>(
       min: 0,
     },
 
+    distance: { type: Number },
+
     status: {
       type: String,
       enum: Object.values(Status),

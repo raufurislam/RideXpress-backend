@@ -36,6 +36,7 @@ export interface IRide {
   driverId?: Types.ObjectId;
   pickupLocation: IRideLocation;
   destinationLocation: IRideLocation;
+  distance: number;
   status: Status;
   fare?: number;
   vehicleType: VEHICLE_TYPE;
