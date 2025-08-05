@@ -1,30 +1,21 @@
 // ride.validation.ts
 import { z } from "zod";
-import { Status, VEHICLE_TYPE } from "./ride.interface";
+import { VEHICLE_TYPE } from "./ride.interface";
 
-export const rideZodSchema = z.object({
-  riderId: z.string({ required_error: "Rider ID is required" }),
-  driverId: z.string().optional(),
-  pickupLocation: z.string({ required_error: "Pickup location is required" }),
-  destinationLocation: z.string({
-    required_error: "Destination location is required",
-  }),
+const rideLocationSchema = z.object({
+  type: z.literal("Point"),
+  coordinates: z
+    .tuple([z.number(), z.number()]) // [longitude, latitude]
+    .refine(
+      ([lon, lat]) => lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180,
+      {
+        message: "Invalid coordinates",
+      }
+    ),
+});
 
-  status: z.nativeEnum(Status).optional(),
-  fare: z.number().optional(),
-  cancellationReason: z.string().optional(),
-
-  vehicleType: z.nativeEnum(VEHICLE_TYPE, {
-    required_error: "Vehicle type is required",
-  }),
-
-  timestamps: z
-    .object({
-      requestedAt: z.string().datetime().optional(),
-      acceptedAt: z.string().datetime().optional(),
-      pickedUpAt: z.string().datetime().optional(),
-      completedAt: z.string().datetime().optional(),
-      cancelledAt: z.string().datetime().optional(),
-    })
-    .optional(),
+export const createRideZodSchema = z.object({
+  pickupLocation: rideLocationSchema,
+  destinationLocation: rideLocationSchema,
+  vehicleType: z.enum(Object.values(VEHICLE_TYPE) as [string]),
 });
