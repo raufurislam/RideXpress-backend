@@ -33,4 +33,6 @@ router.patch(
   RideController.cancelRide
 );
 
+router.get("/rideHistory", checkAuth(Role.RIDER), RideController.rideHistory);
+
 export const RideRoute = router;

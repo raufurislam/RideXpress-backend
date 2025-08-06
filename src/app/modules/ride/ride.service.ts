@@ -295,9 +295,28 @@ const cancelRide = async (
   return ride;
 };
 
+const rideHistory = async (userId: string) => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Fetch completed, cancelled, or rejected rides only
+  const rides = await Ride.find({
+    riderId: userId,
+    status: {
+      $in: [RideStatus.COMPLETED, RideStatus.CANCELLED, RideStatus.REJECTED],
+    },
+  }).sort({ "timestamps.completedAt": -1 }); // Optional: show most recent first
+
+  return rides;
+};
+
 export const RideService = {
   requestRide,
   getAllRides,
   updateRideStatus,
   cancelRide,
+  rideHistory,
 };
