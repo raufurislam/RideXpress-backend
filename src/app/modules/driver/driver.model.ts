@@ -31,6 +31,10 @@ const driverSchema = new Schema<IDriver>(
     },
     appliedAt: { type: Date, default: Date.now },
     approvedAt: { type: Date },
+    earnings: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

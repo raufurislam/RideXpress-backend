@@ -13,6 +13,7 @@ import { QueryBuilder } from "../../utils/QueryBuilder";
 import { rideSearchableFields } from "./ride.constant";
 import { AVAILABILITY, DRIVER_STATUS } from "../driver/driver.interface";
 import { Driver } from "../driver/driver.model";
+import { cancelledRideToday } from "../../utils/cancelledRideToday";
 
 const requestRide = async (payload: Partial<IRide>, userId: string) => {
   const isUserExist = await User.findById(userId);
@@ -211,7 +212,7 @@ const updateRideStatus = async (
       updateData.driverId = new Types.ObjectId(userId);
     }
 
-    // 👛 Add fare to driver earnings if ride is completed
+    // Add fare to driver earnings if ride is completed
     if (newStatus === RideStatus.COMPLETED && ride.fare && driver) {
       await Driver.updateOne(
         { userId },
@@ -237,8 +238,66 @@ const updateRideStatus = async (
   }
 };
 
+const cancelRide = async (
+  userId: string,
+  rideId: string,
+  cancelStatus: RideStatus
+) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const ride = await Ride.findById(rideId);
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
+  }
+
+  if (ride.riderId.toString() !== userId) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "You are not authorized to cancel this ride"
+    );
+  }
+
+  if (
+    [
+      RideStatus.ACCEPTED,
+      RideStatus.COMPLETED,
+      RideStatus.PICKED_UP,
+      RideStatus.REJECTED,
+      RideStatus.IN_TRANSIT,
+    ].includes(ride.status)
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Cannot cancel ride because its status is '${ride.status}'`
+    );
+  }
+
+  if (ride.status === RideStatus.CANCELLED) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Ride is already cancelled");
+  }
+
+  const todaysCancelledCount = await cancelledRideToday(userId);
+  if (todaysCancelledCount >= 3) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "You cannot cancel more than 3 rides per day"
+    );
+  }
+
+  // ✅ Apply cancellation
+  ride.status = cancelStatus;
+  ride.timestamps.cancelledAt = new Date();
+  await ride.save();
+
+  return ride;
+};
+
 export const RideService = {
   requestRide,
   getAllRides,
   updateRideStatus,
+  cancelRide,
 };
