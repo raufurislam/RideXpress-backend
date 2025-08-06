@@ -25,4 +25,5 @@ export interface IDriver {
   availability: AVAILABILITY;
   appliedAt: Date;
   approvedAt?: Date;
+  earnings?: number;
 }

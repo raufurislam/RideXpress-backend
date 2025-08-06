@@ -38,7 +38,79 @@ const getAllRides = catchAsync(
   }
 );
 
+const updateRideStatus = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { rideStatus } = req.body;
+    const { rideId } = req.params;
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.updateRideStatus(
+      decodedToken.userId,
+      rideId,
+      rideStatus
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: `Ride status has been updated to '${result?.status}' successfully`,
+      data: result,
+    });
+  }
+);
+
+const cancelRide = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { rideStatus } = req.body;
+    const { rideId } = req.params;
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.cancelRide(
+      decodedToken.userId,
+      rideId,
+      rideStatus
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Your ride has been cancelled successfully",
+      data: result,
+    });
+  }
+);
+
+const rideHistory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.rideHistory(decodedToken.userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Ride History has been retrieve successfully",
+      data: result,
+    });
+  }
+);
+
+const viewEarningHistory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.viewEarningHistory(decodedToken.userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Driver Earning History has been retrieve successfully",
+      data: result,
+    });
+  }
+);
+
 export const RideController = {
   requestRide,
   getAllRides,
+  updateRideStatus,
+  cancelRide,
+  rideHistory,
+  viewEarningHistory,
 };

@@ -71,36 +71,92 @@ const getMe = async (userId: string) => {
   };
 };
 
+// const updateUser = async (
+//   userId: string,
+//   payload: Partial<IUser>,
+//   decodedToken: JwtPayload
+// ) => {
+//   const ifUserExist = await User.findById(userId);
+
+//   if (!ifUserExist) {
+//     throw new AppError(httpStatus.NOT_FOUND, "User not found");
+//   }
+
+//   if (payload.role) {
+//     if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
+//       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+//     }
+
+//     if (
+//       decodedToken.role === Role.SUPER_ADMIN &&
+//       decodedToken.role === Role.ADMIN
+//     ) {
+//       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+//     }
+//   }
+
+//   if (payload.isActive || payload.isDeleted || payload.isVerified) {
+//     if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
+//       throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+//     }
+//   }
+
+//   if (payload.password) {
+//     payload.password = await bcryptjs.hash(
+//       payload.password,
+//       envVars.BCRYPT_SALT_ROUND
+//     );
+//   }
+
+//   const newUpdateUser = await User.findByIdAndUpdate(userId, payload, {
+//     new: true,
+//     runValidators: true,
+//   });
+
+//   return newUpdateUser;
+// };
+
 const updateUser = async (
   userId: string,
   payload: Partial<IUser>,
   decodedToken: JwtPayload
 ) => {
-  const ifUserExist = await User.findById(userId);
+  const requestingUserId = decodedToken.userId;
+  const requestingRole = decodedToken.role;
 
+  // Check if user exists
+  const ifUserExist = await User.findById(userId);
   if (!ifUserExist) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  if (payload.role) {
-    if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    }
+  // If not admin/super-admin, prevent editing others
+  const isSelfUpdate = requestingUserId === userId;
+  const isAdmin =
+    requestingRole === Role.ADMIN || requestingRole === Role.SUPER_ADMIN;
 
-    if (
-      decodedToken.role === Role.SUPER_ADMIN &&
-      decodedToken.role === Role.ADMIN
-    ) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    }
+  if (!isAdmin && !isSelfUpdate) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not allowed to update other users"
+    );
   }
 
-  if (payload.isActive || payload.isDeleted || payload.isVerified) {
-    if (decodedToken.role === Role.RIDER || decodedToken.role === Role.DRIVER) {
-      throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
-    }
+  // Prevent regular users from changing sensitive flags
+  if (
+    !isAdmin &&
+    (payload.role ||
+      payload.isActive ||
+      payload.isDeleted ||
+      payload.isVerified)
+  ) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not allowed to modify restricted fields"
+    );
   }
 
+  // Hash password if updating
   if (payload.password) {
     payload.password = await bcryptjs.hash(
       payload.password,
@@ -108,12 +164,12 @@ const updateUser = async (
     );
   }
 
-  const newUpdateUser = await User.findByIdAndUpdate(userId, payload, {
+  const updatedUser = await User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
   });
 
-  return newUpdateUser;
+  return updatedUser;
 };
 
 export const UserServices = {

@@ -21,4 +21,24 @@ router.get(
   RideController.getAllRides
 );
 
+router.patch(
+  "/rideStatus/:rideId",
+  checkAuth(Role.DRIVER),
+  RideController.updateRideStatus
+);
+
+router.patch(
+  "/cancel/:rideId",
+  checkAuth(Role.RIDER),
+  RideController.cancelRide
+);
+
+router.get("/rideHistory", checkAuth(Role.RIDER), RideController.rideHistory);
+
+router.get(
+  "/earnings",
+  checkAuth(Role.DRIVER),
+  RideController.viewEarningHistory
+);
+
 export const RideRoute = router;
