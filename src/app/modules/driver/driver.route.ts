@@ -33,7 +33,7 @@ router.patch(
 );
 
 router.patch(
-  "/driver-application/update-availability",
+  "/update-availability",
   checkAuth(Role.DRIVER),
   validateRequest(updateAvailabilityZodSchema),
   DriverController.updateAvailability

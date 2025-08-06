@@ -17,3 +17,18 @@ export const rideStatusFlow: Record<RideStatus, RideStatus[]> = {
   [RideStatus.REJECTED]: [],
   [RideStatus.CANCELLED]: [],
 };
+
+export const getFullRideStatusFlow = (): string => {
+  const flow: string[] = [];
+  let current: RideStatus | undefined = RideStatus.REQUESTED;
+
+  const visited = new Set<string>();
+
+  while (current && !visited.has(current)) {
+    flow.push(current);
+    visited.add(current);
+    current = rideStatusFlow[current]?.[0]; // Only follow the primary path
+  }
+
+  return flow.join(" → ");
+};
