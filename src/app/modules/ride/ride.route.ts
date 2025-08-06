@@ -35,4 +35,10 @@ router.patch(
 
 router.get("/rideHistory", checkAuth(Role.RIDER), RideController.rideHistory);
 
+router.get(
+  "/earnings",
+  checkAuth(Role.DRIVER),
+  RideController.viewEarningHistory
+);
+
 export const RideRoute = router;

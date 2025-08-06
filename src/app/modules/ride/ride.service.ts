@@ -313,10 +313,39 @@ const rideHistory = async (userId: string) => {
   return rides;
 };
 
+const viewEarningHistory = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const driver = await Driver.findOne({ userId });
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+
+  const completedRides = await Ride.find({
+    driverId: userId,
+    status: RideStatus.COMPLETED,
+  }).sort({ "timestamps.completedAt": -1 }); // Most recent first
+
+  const totalEarnings = completedRides.reduce(
+    (acc, ride) => acc + (ride.fare || 0),
+    0
+  );
+
+  return {
+    totalRides: completedRides.length,
+    totalEarnings,
+    rides: completedRides,
+  };
+};
+
 export const RideService = {
   requestRide,
   getAllRides,
   updateRideStatus,
   cancelRide,
   rideHistory,
+  viewEarningHistory,
 };

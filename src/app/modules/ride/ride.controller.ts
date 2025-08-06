@@ -92,10 +92,25 @@ const rideHistory = catchAsync(
   }
 );
 
+const viewEarningHistory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user as JwtPayload;
+    const result = await RideService.viewEarningHistory(decodedToken.userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Driver Earning History has been retrieve successfully",
+      data: result,
+    });
+  }
+);
+
 export const RideController = {
   requestRide,
   getAllRides,
   updateRideStatus,
   cancelRide,
   rideHistory,
+  viewEarningHistory,
 };
