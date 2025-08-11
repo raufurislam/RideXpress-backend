@@ -10,7 +10,7 @@ const rideLocationSchema = new Schema(
       required: true,
     },
     coordinates: {
-      type: [Number], // [longitude, latitude]
+      type: [Number], // [latitude, longitude]
       required: true,
     },
   },
