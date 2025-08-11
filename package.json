@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
-    "lint": "npx eslint ./src"
+    "build": "tsc",
+    "lint": "npx eslint ./src",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -37,10 +39,8 @@
     "typescript-eslint": "^8.36.0"
   },
   "dependencies": {
-    "@types/multer": "^2.0.0",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
-    "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",

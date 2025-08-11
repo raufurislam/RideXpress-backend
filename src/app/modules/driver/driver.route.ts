@@ -26,7 +26,7 @@ router.get(
 );
 
 router.patch(
-  "/driver-application/:driverId/status",
+  "/driver-application/status/:driverId",
   checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
   validateRequest(updateDriverApplicationZodSchema),
   DriverController.updateDriver
