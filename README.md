@@ -1,190 +1,584 @@
-# Ride Booking API
+# 🚖 Ride Express (Backend)
 
-### **🎯 Project Overview**
-
-Design and build a **secure, scalable, and role-based backend API** for a **ride booking system** (like Uber, Pathao) using **Express.js** and **Mongoose**.
-
-Your task is to implement a system where **riders** can request rides, **drivers** can accept and complete rides, and **admins** can manage the overall system.
-
-You must implement:
-
-- 🔐 Authentication
-- 🎭 Role-based Authorization
-- 🧍 Rider & Driver Logic
-- 🚗 Ride Management Logic
-- 📦 Modular Code Architecture
-- 🔁 Proper API Endpoints
-
-While the **system design is up to you**, the implementation **must include the following minimum requirements**.
+A **modular, scalable, and production-ready** backend for a ride-hailing platform built with **TypeScript**, **Express.js**, and **MongoDB**. It supports **secure authentication**, **role-based access**, and a complete **ride request & fulfillment workflow** with real-time status updates.
 
 ---
 
-### **📌 Minimum Functional Requirements**
+## 🌍 Live API
 
-- ✅ JWT-based login system with three roles: `admin`, `rider`, `driver`
-- ✅ Secure password hashing (using bcrypt or other appropriate way)
-- ✅ Riders should be able to:
-  - Request a ride with pickup & destination location
-  - Cancel a ride (within allowed window)
-  - View ride history
-- ✅ Drivers should be able to:
-  - Accept/reject ride requests
-  - Update ride status (Picked Up → In Transit → Completed)
-  - View earnings history
-  - Set availability status (Online/Offline)
-- ✅ Admins should be able to:
-  - View all users, drivers, and rides
-  - Approve/suspend drivers
-  - Block/unblock user accounts
-  - Generate reports (optional)
-- ✅ All rides must be **stored with complete history**
-- ✅ Role-based route protection must be implemented
+**Base URL:** `https://your-api-name.vercel.app/api/v1`
 
 ---
 
-### **🧠 Design Thinking Guide**
+## ✨ Key Features
 
-Think through the following aspects to ensure clean logic and future scalability.
+- **JWT-Based Authentication** – Secure login for all user roles (**admin**, **rider**, **driver**).
+- **Role-Based Authorization** – Middleware ensures users only access endpoints allowed for their role.
+- **Driver & Rider Profiles** – Store and manage personal & vehicle details.
+- **Ride Request & Fulfillment Workflow**
 
----
+  - `REQUESTED → ACCEPTED → PICKED_UP → IN_TRANSIT → COMPLETED`
+  - Includes validations for proper status transitions.
 
-### **🚘 Ride Request & Fulfillment**
-
-- How will ride requests be matched with available drivers?
-  - Manual via driver action or auto-match?
-- How will cancellation be handled?
-  - Allowed only before driver accepts?
-- What happens if no driver is available?
-  - Waitlist or error response?
-- How will pickup/destination locations be stored?
-  - Coordinates (lat/lng)? Addresses?
-
----
-
-### **🛠 Ride Lifecycle & Status**
-
-- What statuses will a ride go through?
-  - e.g., requested → accepted → picked_up → in_transit → completed
-- Can a ride be canceled at any stage?
-- Who can update which status?
-  - Driver only? Admin?
-- Will you log timestamps for each status?
+- **Earnings Tracking** – Automatically update driver earnings upon ride completion.
+- **Real-time Ride Status Updates** – Instant feedback for users and drivers.
+- **Data Validation** – Strong schema validation using **Zod**.
+- **MongoDB Transactions** – Ensures data consistency in multi-step operations.
+- **Error Handling** – Centralized handling with custom `AppError` class.
 
 ---
 
-### **👥 Role Representation**
-
-- Will you use a single User model with role field?
-- Will drivers have extra fields?
-  - Approval status? Online status? Vehicle info?
-- What is the minimum data required at registration?
-
----
-
-### **🫵 Validations & Business Rules**
-
-- Can a suspended driver accept rides?
-- What if a driver is already on a ride?
-- Can multiple rides be active for a single rider?
-- Will there be maximum allowed cancel attempts?
-
----
-
-### **📜 Access & Visibility**
-
-- Can riders view all past rides?
-- Can drivers see only completed rides or pending ones too?
-- Can admins:
-  - View all ride records?
-  - Block riders/drivers?
-  - Change ride statuses manually (optional)?
-
----
-
-### **🔐 Role-Based Control**
-
-- What endpoints are only for riders?
-- What endpoints are only for drivers?
-- What endpoints are shared or admin-only?
-- How will you protect routes based on JWT + role?
-
----
-
-### **🧩 API Design**
-
-- Follow RESTful route conventions:
-  - POST /rides/request, PATCH /rides/:id/status, GET /rides/me
-  - PATCH /drivers/approve/:id, PATCH /users/block/:id
-- Handle all common edge cases:
-  - Ride conflicts, invalid requests, blocked users, etc.
-- Use proper status codes and clear messages:
-  - 200, 201, 400, 403, 404, etc.
-
----
-
-### **🧠 Optional (Bonus Considerations)**
-
-- Will you implement:
-  - **Driver ratings**?
-  - **Rider feedback system**?
-  - **Fare estimation logic**?
-  - **Admin dashboard analytics?**
-  - **Geo-based driver search?**
-
-> ⚠️ Use this section as your planning tool before you write code.
-
----
-
-### **📁 Suggested Project Structure**
-
-Maintain a modular, production-ready architecture:
+## 📂 Project Structure
 
 ```
 src/
-├── modules/
-│   ├── auth/
-│   ├── user/
-│   ├── driver/
-│   ├── ride/
-├── middlewares/
-├── config/
-├── utils/
-├── app.ts
+├── app/
+│   ├── config/
+│   ├── errorHelpers/
+│   ├── helpers/
+│   ├── interface/
+│   ├── middlewares/
+│   ├── modules/
+│   │   ├── auth/
+│   │   ├── driver/
+│   │   ├── ride/
+│   │   └── user/
+│   ├── routes/
+│   ├── utils/
+│   └── constants
+├── app.ts/
+├── server.ts
 ```
 
-Feel free to customize as needed.
+---
+
+## 🛠 Tech Stack
+
+**Core Framework & Language**
+
+- **Node.js** – Runtime environment
+- **Express.js (v5)** – Web framework for building RESTful APIs
+- **TypeScript** – Static typing for better maintainability
+
+**Database & ORM**
+
+- **MongoDB** – NoSQL database for flexible data storage
+- **Mongoose** – Elegant MongoDB object modeling
+
+**Authentication & Security**
+
+- **JWT (jsonwebtoken)** – Token-based authentication
+- **bcryptjs** – Password hashing
+- **Passport.js** – Authentication middleware
+- **Passport-Local & Passport-Google-OAuth20** – Local and Google login strategies
+
+**Validation & Utilities**
+
+- **Zod** – Data schema validation
+- **Day.js** – Date and time manipulation
+- **Http-Status-Codes** – Clean HTTP response codes
+- **Axios** – HTTP client for external API calls
+
+**Development & Tooling**
+
+- **ts-node-dev** – Hot-reloading for TypeScript
+- **ESLint** – Code linting
+- **dotenv** – Environment variable management
 
 ---
 
-### **🧪 Testing & Documentation**
+## 🚀 Features
 
-- ✅ Use **Postman** to test and document your endpoints
-- ✅ Submit a professional README.md with:
-  - Project overview
-  - Setup & environment instructions
-  - API endpoints summary
-- ✅ Submit a **5–10 minute screen-recorded video** demonstrating:
-  - **Intro (30s)** – Name, project name, core idea
-  - **Folder Structure (1 min)** – Brief walkthrough of src/
-  - **Auth Flow (1 min)** – Register, login, JWT, roles
-  - **Rider Features (1 min)** – Request, cancel, ride history
-  - **Driver Features (1 min)** – Accept ride, update status, earnings
-  - **Admin Features (1 min)** – Approve/suspend drivers, view system
-  - **Postman Demo (3–4 min)** – End-to-end test flow
-  - **Wrap Up (30s)** – Summary + README mention
+### 🛵 Rider Features
+
+- **User Registration & Login** (via credentials or Google OAuth)
+- **Profile Management** – View and update personal details
+- **Request a Ride** – Specify pickup and destination coordinates, choose vehicle type
+- **Ride History** – View list of completed and cancelled rides
+- **Cancel Ride** – Cancel a requested or accepted ride before pickup
+- **Password Management** – Change/reset/set password securely
 
 ---
 
-### **📊 Evaluation Rubric (Total: 60 Marks)**
+### 🚗 Driver Features
 
-| **Criteria**                                             | **Marks** |
-| -------------------------------------------------------- | --------- |
-| 🔐 Authentication (JWT + bcrypt)                         | 5         |
-| 🔒 Role-Based Authorization Middleware                   | 5         |
-| 👤 Rider/Driver/Admin Logic + Schema Design + Validation | 10        |
-| 🚕 Ride Logic + History + Status Flow + Validation       | 10        |
-| 📜 Ride History + Cancellation Handling                  | 10        |
-| 🧱 Code Structure + Error Handling                       | 5         |
-| 🧠 Creativity + Thoughtful Architecture                  | 5         |
-| 📄 README + 🔁 API Testing + 🎥 Video                    | 10        |
-| **Total**                                                | **60**    |
+- **Driver Application** – Riders can apply to become drivers
+- **Update Driver Availability** – Toggle availability for accepting rides
+- **Accept & Fulfill Rides** – Update ride status through full workflow:
+  `REQUESTED → ACCEPTED → PICKED_UP → IN_TRANSIT → COMPLETED`
+- **Earnings Tracking** – View total earnings from completed rides
+
+---
+
+### 🛠️ Admin & Super Admin Features
+
+- **User Management** – View all registered users, view individual profiles, update user details
+- **Driver Application Management** – Review and update driver application status
+- **Ride Management** – View all rides in the system
+- **Role-Based Access Control** – Restrict actions to only authorized roles
+
+---
+
+## 📡 API Endpoints
+
+Below is the complete list of available API endpoints for **Ride Express**.
+
+---
+
+### **1️⃣ User Management**
+
+#### **Register User** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/user/register
+```
+
+**Body:**
+
+```json
+{
+  "name": "Your Name",
+  "email": "your-email@gmail.com",
+  "password": "123456Ab@"
+}
+```
+
+**Access:** Public
+
+---
+
+#### **Get All Users** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/user/all-users
+```
+
+**Access:** `ADMIN`, `SUPER_ADMIN`
+
+---
+
+#### **Get Single User** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/user/:id
+```
+
+**Access:** `ADMIN`, `SUPER_ADMIN`
+
+---
+
+#### **Get My Profile** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/user/me
+```
+
+**Access:** All authenticated users
+
+---
+
+#### **Update User** – `PATCH`
+
+```
+https://ride-express-backend.vercel.app/api/v1/user/:id
+```
+
+**Body Example:**
+
+```json
+{
+  "address": "Nandina",
+  "phone": "017XXXXXXXX",
+  "picture": "https://example.com/profile.jpg",
+  "role": "DRIVER", // only admin and super admin
+  "isActive": "ACTIVE", // only admin and super admin
+  "isDeleted": false, // only admin and super admin
+  "isVerified": true // only admin and super admin
+}
+```
+
+**Access:**
+
+- User can update own profile
+- `ADMIN` & `SUPER_ADMIN` can update any user
+
+---
+
+### **2️⃣ Authentication**
+
+#### **Login** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/auth/login
+```
+
+**Body:**
+
+```json
+{
+  "email": "registered-email@gmail.com",
+  "password": "your-password"
+}
+```
+
+**Access:** Public
+
+---
+
+#### **Refresh Token** – `POST`
+
+```
+http://localhost:5000/api/v1/auth/refresh-token
+```
+
+**Access:** Public (with valid refresh token)
+
+---
+
+#### **Logout** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/auth/logout
+```
+
+**Access:** Authenticated users
+
+---
+
+#### **Set Password (Google Users)** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/auth/set-password
+```
+
+**Body:**
+
+```json
+{
+  "password": "753952Bd@"
+}
+```
+
+**Access:** Authenticated Google users
+
+---
+
+#### **Reset / Change Password** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/auth/reset-password
+```
+
+**Body:**
+
+```json
+{
+  "oldPassword": "your-old-password",
+  "newPassword": "your-new-password"
+}
+```
+
+**Access:** Authenticated users
+
+---
+
+### **3️⃣ Driver Management**
+
+#### **Apply to Become Driver** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/driver/apply-driver
+```
+
+**Body:**
+
+```json
+{
+  "vehicleType": "CAR",
+  "vehicleModel": "Honda City 2021",
+  "licenseNumber": "MH-2024-XYZ123",
+  "vehicleNumber": "MH12AB4567"
+}
+```
+
+**Access:** `RIDER` only
+
+---
+
+#### **Get All Driver Applications** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/driver/driver-application
+```
+
+**Query Params:**
+
+- `status=APPROVED`
+- `vehicleType=CAR`
+- `availability=AVAILABLE`
+
+**Access:** `ADMIN`, `SUPER_ADMIN`
+
+---
+
+#### **Update Driver Status** – `PATCH`
+
+**URL:**
+
+```
+https://ride-express-backend.vercel.app/api/v1/driver/driver-application/status/:driverId
+```
+
+**Body:**
+
+```json
+{
+  "driverStatus": "APPROVED"
+}
+```
+
+**Access:** `ADMIN`, `SUPER_ADMIN`
+
+---
+
+#### **Update Availability** – `PATCH`
+
+**URL:**
+
+```
+https://ride-express-backend.vercel.app/api/v1/driver/update-availability
+```
+
+**Body:**
+
+```json
+{
+  "availability": "AVAILABLE"
+}
+```
+
+**Access:** `DRIVER` only
+
+---
+
+### **4️⃣ Ride Management**
+
+#### **Request Ride** – `POST`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride
+```
+
+**Body:**
+
+```json
+{
+  "pickupLocation": {
+    "type": "Point",
+    "coordinates": [23.7722057738986, 90.40114048717416] // lat, lan
+  },
+  "destinationLocation": {
+    "type": "Point",
+    "coordinates": [23.793921843208647, 90.40349750156938] // lat, lan
+  },
+  "vehicleType": "CAR"
+}
+```
+
+**Access:** `RIDER` only
+
+---
+
+#### **Update Ride Status** – `PATCH`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride/rideStatus/:rideId
+```
+
+**Body:**
+
+```json
+{
+  "rideStatus": "COMPLETED"
+}
+```
+
+## 🔄 Ride Status Flow
+
+```
+REQUESTED → ACCEPTED → PICKED_UP → IN_TRANSIT → COMPLETED
+     ↘ REJECTED
+     ↘ CANCELLED
+```
+
+**Access:** `DRIVER` only
+
+---
+
+#### **Get All Rides** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride
+```
+
+**Access:** `ADMIN`, `SUPER_ADMIN`
+
+---
+
+#### **Cancel Ride** – `PATCH`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride/cancel/:rideId
+```
+
+**Body:**
+
+```json
+{
+  "rideStatus": "CANCELLED"
+}
+```
+
+**Access:** `RIDER` only
+
+---
+
+#### **Ride History (Rider)** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride/rideHistory
+```
+
+**Access:** `RIDER` only
+
+---
+
+#### **Earning History (Driver)** – `GET`
+
+```
+https://ride-express-backend.vercel.app/api/v1/ride/earnings
+```
+
+**Access:** `DRIVER` only
+
+---
+
+## 📌 Validation Rules
+
+- **Coordinates** must be `[latitude, longitude]` format within valid ranges.
+- **Vehicle type** must match the driver’s registered type.
+- **Driver availability** must be set to AVAILABLE before accepting rides.
+
+---
+
+## ⚙️ Setup & Environment
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/your-username/ride-express-backend.git
+cd ride-express-backend
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Configure Environment Variables
+
+Create a `.env` file in the **root directory** and copy the following demo configuration:
+
+```env
+# Server
+PORT=5000
+NODE_ENV=development
+
+# Database (Demo Mongo URI)
+DB_URL=mongodb+srv://<username>:<password>@cluster0.mongodb.net/demo-db?retryWrites=true&w=majority
+
+# JWT Auth (Demo secrets)
+JWT_ACCESS_SECRET=demo_access_secret
+JWT_ACCESS_EXPIRES=1d
+JWT_REFRESH_SECRET=demo_refresh_secret
+JWT_REFRESH_EXPIRES=30d
+
+# Express Session
+EXPRESS_SESSION_SECRET=demo_session_secret
+
+# Password Hashing
+BCRYPT_SALT_ROUND=10
+
+# Super Admin (Demo credentials)
+SUPER_ADMIN_EMAIL=demo_super_admin@example.com
+SUPER_ADMIN_PASSWORD=DemoPassword123!
+
+# Frontend URL (Demo)
+FRONTEND_URL=http://localhost:5173
+
+# Google OAuth (Demo credentials)
+GOOGLE_CLIENT_ID=your-demo-google-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-demo-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:5000/api/v1/auth/google/callback
+```
+
+> 💡 **Note:** Replace placeholder values (`<username>`, `<password>`, `your-demo-google-client-id`, etc.) with actual credentials in your local development environment.
+
+---
+
+## 🚀 Start the Project
+
+### Development Mode
+
+Runs with **hot reload**:
+
+```bash
+npm run dev
+```
+
+### Production Build
+
+Build and run optimized code:
+
+```bash
+npm run build
+npm start
+```
+
+### Lint Code
+
+```bash
+npm run lint
+```
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** – you are free to use, modify, and distribute it for educational and commercial purposes, provided that the original copyright notice is included.
+
+---
+
+## 👨‍💻 Author
+
+**Your Name** – [GitHub](https://github.com/raufurislam) | [LinkedIn](https://www.linkedin.com/in/raufur-islam/)
+
+---
+
+## 🙌 Acknowledgements
+
+Special thanks to:
+
+- **MongoDB**, **Express**, **TypeScript**, **Node.js** – for powering the backend.
+- **Zod** – for making validation clean and maintainable.
+- **Open Source Community** – for inspiring architecture and best practices.
+
+---
+
+## 📧 Contact
+
+For questions, feedback, or collaboration opportunities:
+
+- **Email:** [raufurislam@gmail.com](mailto:youremail@example.com)
+- **GitHub Issues:** Please open a ticket in this repository.
