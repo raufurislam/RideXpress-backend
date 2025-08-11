@@ -6,7 +6,7 @@ A **modular, scalable, and production-ready** backend for a ride-hailing platfor
 
 ## 🌍 Live API
 
-**Base URL:** `https://your-api-name.vercel.app/api/v1`
+**Base URL:** `https://ride-express-backend.vercel.app`
 
 ---
 
