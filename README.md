@@ -8,6 +8,39 @@ A **modular, scalable, and production-ready** backend for a ride-hailing platfor
 
 **Base URL:** `https://ride-express-backend.vercel.app`
 
+## 🛠 Tech Stack
+
+**Core Framework & Language**
+
+- **Node.js** – Runtime environment
+- **Express.js (v5)** – Web framework for building RESTful APIs
+- **TypeScript** – Static typing for better maintainability
+
+**Database & ORM**
+
+- **MongoDB** – NoSQL database for flexible data storage
+- **Mongoose** – Elegant MongoDB object modeling
+
+**Authentication & Security**
+
+- **JWT (jsonwebtoken)** – Token-based authentication
+- **bcryptjs** – Password hashing
+- **Passport.js** – Authentication middleware
+- **Passport-Local & Passport-Google-OAuth20** – Local and Google login strategies
+
+**Validation & Utilities**
+
+- **Zod** – Data schema validation
+- **Day.js** – Date and time manipulation
+- **Http-Status-Codes** – Clean HTTP response codes
+- **Axios** – HTTP client for external API calls
+
+**Development & Tooling**
+
+- **ts-node-dev** – Hot-reloading for TypeScript
+- **ESLint** – Code linting
+- **dotenv** – Environment variable management
+
 ---
 
 ## ✨ Key Features
@@ -49,41 +82,6 @@ src/
 ├── app.ts/
 ├── server.ts
 ```
-
----
-
-## 🛠 Tech Stack
-
-**Core Framework & Language**
-
-- **Node.js** – Runtime environment
-- **Express.js (v5)** – Web framework for building RESTful APIs
-- **TypeScript** – Static typing for better maintainability
-
-**Database & ORM**
-
-- **MongoDB** – NoSQL database for flexible data storage
-- **Mongoose** – Elegant MongoDB object modeling
-
-**Authentication & Security**
-
-- **JWT (jsonwebtoken)** – Token-based authentication
-- **bcryptjs** – Password hashing
-- **Passport.js** – Authentication middleware
-- **Passport-Local & Passport-Google-OAuth20** – Local and Google login strategies
-
-**Validation & Utilities**
-
-- **Zod** – Data schema validation
-- **Day.js** – Date and time manipulation
-- **Http-Status-Codes** – Clean HTTP response codes
-- **Axios** – HTTP client for external API calls
-
-**Development & Tooling**
-
-- **ts-node-dev** – Hot-reloading for TypeScript
-- **ESLint** – Code linting
-- **dotenv** – Environment variable management
 
 ---
 
