@@ -1,0 +1,734 @@
+{
+  "info": {
+    "_postman_id": "96048f20-f6e2-4e1d-888e-d18ffc6d6f36",
+    "name": "RideExpress",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45554881",
+    "_collection_link": "https://raufurislam.postman.co/workspace/raufurislam's-Workspace~f3add14f-0cd0-4018-875f-c9fbff9baba5/collection/45554881-96048f20-f6e2-4e1d-888e-d18ffc6d6f36?action=share&source=collection_link&creator=45554881"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODdkNGQ4YjBhNjI3NmI2NDc2MDhjN2MiLCJlbWFpbCI6InJhdWZ1cmlzbGFtQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzNjE5NzgyLCJleHAiOjE3NTM3MDYxODJ9.b4SsCKUNPldaVd0Y4tUeGlT8w_qWflfTMgFGecF34U0",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Rider2\",\r\n    \"email\": \"rider2@gmail.com\",\r\n    \"password\": \"753951Bd@\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/user/register",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "user", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All user",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDg1MjE0OSwiZXhwIjoxNzU0OTM4NTQ5fQ.3va5BwsF-xf7APqONRzw60HrCKpPNwbOc5hxdtfsOuw",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/user/all-users",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "user", "all-users"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Single User",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDg1MjE0OSwiZXhwIjoxNzU0OTM4NTQ5fQ.3va5BwsF-xf7APqONRzw60HrCKpPNwbOc5hxdtfsOuw",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/user/6898eaf6881962052cbef65a",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "user", "6898eaf6881962052cbef65a"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDkxNzU2OSwiZXhwIjoxNzU1MDAzOTY5fQ.MVUTvsGLdwj_pjAggvyjclzY5bdnFlIpXxmoIc9SijQ",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "https://github.com/raufurislam/RideXpress-backend/api/v1/user/me",
+              "protocol": "https",
+              "host": ["github", "com"],
+              "path": [
+                "raufurislam",
+                "RideXpress-backend",
+                "api",
+                "v1",
+                "user",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDkxNDc1OCwiZXhwIjoxNzU1MDAxMTU4fQ.3ScEFqgEMzIZACpTuxFZP1AQFwSSxfq2BzPHbjXIbrY",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n//   \"address\": \"Nandina\",\r\n//   \"phone\": \"01700000000\",\r\n//   \"picture\": \"https://example.com/profile.jpg\",\r\n//   \"role\": \"ADMIN\" // only admin and super admin\r\n//   \"isActive\": \"ACTIVE\", // only admin and super admin\r\n//   \"isDeleted\": false, // only admin and super admin\r\n//   \"isVerified\": true // only admin and super admin\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/user/6899df7c180aece61e944505",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "user", "6899df7c180aece61e944505"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "User login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    // \"email\": \"super@gmail.com\",\r\n    // \"password\": \"753951Bd@\"\r\n    \r\n    // \"email\": \"admin1@gmail.com\",\r\n    // \"password\": \"753951Bd@\"\r\n    \r\n    \"email\": \"driver1@gmail.com\",\r\n    \"password\": \"753951Bd@\"\r\n\r\n    // \"email\": \"rider1@gmail.com\",\r\n    // \"password\": \"753951Bd@\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/auth/login",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Access Token / New Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODc2NzU2MjJmZTI4ZTZlMmE3ZmU2NGIiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mjc0OTA3MiwiZXhwIjoxNzU1MzQxMDcyfQ.VT5ChNGu4u7OErNhvUIE8_L0hcFQ0lHFLcC7VDRVt6s",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"super@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/refresh-token",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["api", "v1", "auth", "refresh-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logged Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODc2NzU2MjJmZTI4ZTZlMmE3ZmU2NGIiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1Mjc0OTA3MiwiZXhwIjoxNzU1MzQxMDcyfQ.VT5ChNGu4u7OErNhvUIE8_L0hcFQ0lHFLcC7VDRVt6s",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"super@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/auth/logout",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "auth", "logout"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Set Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZjI2MGNlM2Y1YzMwOGQyNTYwMjgiLCJlbWFpbCI6InJpZGVyMUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQ4NTQyNjgsImV4cCI6MTc1NDk0MDY2OH0.F7pOn40JAb_yDOYv7Vf9QK9OerWkXdToYaDAaW6A5RI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"password\": \"753952Bd@\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/auth/set-password",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "auth", "set-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset / Changed Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZjI2MGNlM2Y1YzMwOGQyNTYwMjgiLCJlbWFpbCI6InJpZGVyMUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQ4NTQyNjgsImV4cCI6MTc1NDk0MDY2OH0.F7pOn40JAb_yDOYv7Vf9QK9OerWkXdToYaDAaW6A5RI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"oldPassword\": \"753952Bd@\",\r\n   \"newPassword\": \"753951Bd@\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/auth/reset-password",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "auth", "reset-password"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Driver",
+      "item": [
+        {
+          "name": "Request for driver",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk5ZWE4ZTRkY2NlYWY1ZDRkMWMzOTIiLCJlbWFpbCI6ImRyaXZlcjFAZ21haWwuY29tIiwicm9sZSI6IlJJREVSIiwiaWF0IjoxNzU0OTE5MTc4LCJleHAiOjE3NTUwMDU1Nzh9.hVwHn0nEVh8k_O4C7fpHrnyuzgL_D5eT4jiuVmvwIlw",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"vehicleType\": \"CAR\",\r\n  \"vehicleModel\": \"Honda City 2021\",\r\n  \"licenseNumber\": \"MH-2024-XYZ123\",\r\n  \"vehicleNumber\": \"MH12AB4567\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/driver/apply-driver",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "driver", "apply-driver"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Request for driver",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDg1NDYwOCwiZXhwIjoxNzU0OTQxMDA4fQ.kMLj0ed3AbNu5DNa797nsSQ_1p0iGGxU7JjpuIZ6mlA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"oldPassword\": \"753951Bd@\",\r\n   \"newPassword\": \"12345678\"\r\n}"
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/driver/driver-application",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "driver", "driver-application"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "APPROVED",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Driver status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDkxOTM2OCwiZXhwIjoxNzU1MDA1NzY4fQ.Ffopqq_W5yiFJJS2UUmZIwc3R-lDNxQYCgXANKKiujA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"driverStatus\": \"APPROVED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/driver/driver-application/status/6899f1726f8849b616eefaf6",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": [
+                "api",
+                "v1",
+                "driver",
+                "driver-application",
+                "status",
+                "6899f1726f8849b616eefaf6"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update availability status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFmNjg4MTk2MjA1MmNiZWY2NWEiLCJlbWFpbCI6ImRyaXZlcjFAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDg1NTA0NywiZXhwIjoxNzU0OTQxNDQ3fQ.g9s09GfIPf3ezRMNQ5w7QmBolx0G6mVVmy1o0mjkXhE",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"availability\": \"AVAILABLE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/driver/update-availability",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "driver", "update-availability"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ride",
+      "item": [
+        {
+          "name": "Request Ride",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZjI2MGNlM2Y1YzMwOGQyNTYwMjgiLCJlbWFpbCI6InJpZGVyMUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQ4NTUxNDcsImV4cCI6MTc1NDk0MTU0N30.6QUW_AKQvUdsB_8ihUTqLP29k0jV8GgzkinPUmIb_5U",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pickupLocation\": {\r\n        \"type\": \"Point\",\r\n        \"coordinates\": [\r\n            23.7722057738986,\r\n            90.40114048717416\r\n        ]\r\n    },\r\n    \"destinationLocation\": {\r\n        \"type\": \"Point\",\r\n        \"coordinates\": [\r\n            23.793921843208647,\r\n            90.40349750156938\r\n        ]\r\n    },\r\n    \"vehicleType\": \"CAR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "ride"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update ride (Driver)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk5ZWE4ZTRkY2NlYWY1ZDRkMWMzOTIiLCJlbWFpbCI6ImRyaXZlcjFAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDkxOTY1NiwiZXhwIjoxNzU1MDA2MDU2fQ.ggtcWaE_YwYiXtGYpWFvDy3EsRJZapzmkp2oC-6u8LI",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"rideStatus\": \"COMPLETED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride/rideStatus/6899f2ab6f8849b616eefb05",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "rideStatus",
+                "6899f2ab6f8849b616eefb05"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Rides",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFhM2ZjOTczZDJmNmEwYzk2ZTYiLCJlbWFpbCI6InN1cGVyQGdtYWlsLmNvbSIsInJvbGUiOiJTVVBFUl9BRE1JTiIsImlhdCI6MTc1NDg1NTQ1NCwiZXhwIjoxNzU0OTQxODU0fQ.--xuyYqiL4BW1My7Dac_Z80S7G54QoqZztw2rxHQdDU",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "ride"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel ride (Rider)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZjI2MGNlM2Y1YzMwOGQyNTYwMjgiLCJlbWFpbCI6InJpZGVyMUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQ4NTU1NTksImV4cCI6MTc1NDk0MTk1OX0.LrX7F-Sx1zxsC3a2F__8ssc8GbUX7xg8AeTPtmIqiB0",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"rideStatus\": \"CANCELLED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride/cancel/6898f8508f61d4ca30bfe330",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": [
+                "api",
+                "v1",
+                "ride",
+                "cancel",
+                "6898f8508f61d4ca30bfe330"
+              ],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All Ride History (Rider)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZjI2MGNlM2Y1YzMwOGQyNTYwMjgiLCJlbWFpbCI6InJpZGVyMUBnbWFpbC5jb20iLCJyb2xlIjoiUklERVIiLCJpYXQiOjE3NTQ4NTU1NTksImV4cCI6MTc1NDk0MTk1OX0.LrX7F-Sx1zxsC3a2F__8ssc8GbUX7xg8AeTPtmIqiB0",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride/rideHistory",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "ride", "rideHistory"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Earning History (Driver)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODk4ZWFmNjg4MTk2MjA1MmNiZWY2NWEiLCJlbWFpbCI6ImRyaXZlcjFAZ21haWwuY29tIiwicm9sZSI6IkRSSVZFUiIsImlhdCI6MTc1NDg1NTk2MywiZXhwIjoxNzU0OTQyMzYzfQ.KKWmNS69lrETn4LYWxHganND-OJ5bISsCaLwLMq8DYM",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"rideStatus\": \"CANCELLED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://ride-express-backend.vercel.app/api/v1/ride/earnings",
+              "protocol": "https",
+              "host": ["ride-express-backend", "vercel", "app"],
+              "path": ["api", "v1", "ride", "earnings"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
