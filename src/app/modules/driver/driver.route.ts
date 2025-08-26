@@ -21,7 +21,7 @@ router.post(
 
 router.get(
   "/driver-application",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, ...Object.values(Role)),
   DriverController.getAllDriverApplication
 );
 
