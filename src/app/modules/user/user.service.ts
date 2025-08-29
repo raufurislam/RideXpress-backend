@@ -34,7 +34,6 @@ const createUser = async (payload: Partial<IUser>) => {
     ...rest,
   });
   return user;
-  // return {};
 };
 
 const getAllUsers = async (query: Record<string, string>) => {
@@ -114,62 +113,6 @@ const updateUser = async (
 
   return newUpdateUser;
 };
-
-// const updateUser = async (
-//   userId: string,
-//   payload: Partial<IUser>,
-//   decodedToken: JwtPayload
-// ) => {
-//   const requestingUserId = decodedToken.userId;
-//   const requestingRole = decodedToken.role;
-
-//   // Check if user exists
-//   const ifUserExist = await User.findById(userId);
-//   if (!ifUserExist) {
-//     throw new AppError(httpStatus.NOT_FOUND, "User not found");
-//   }
-
-//   // If not admin/super-admin, prevent editing others
-//   const isSelfUpdate = requestingUserId === userId;
-//   const isAdmin =
-//     requestingRole === Role.ADMIN || requestingRole === Role.SUPER_ADMIN;
-
-//   if (!isAdmin && !isSelfUpdate) {
-//     throw new AppError(
-//       httpStatus.FORBIDDEN,
-//       "You are not allowed to update other users"
-//     );
-//   }
-
-//   // Prevent regular users from changing sensitive flags
-//   if (
-//     !isAdmin &&
-//     (payload.role ||
-//       payload.isActive ||
-//       payload.isDeleted ||
-//       payload.isVerified)
-//   ) {
-//     throw new AppError(
-//       httpStatus.FORBIDDEN,
-//       "You are not allowed to modify restricted fields"
-//     );
-//   }
-
-//   // Hash password if updating
-//   if (payload.password) {
-//     payload.password = await bcryptjs.hash(
-//       payload.password,
-//       envVars.BCRYPT_SALT_ROUND
-//     );
-//   }
-
-//   const updatedUser = await User.findByIdAndUpdate(userId, payload, {
-//     new: true,
-//     runValidators: true,
-//   });
-
-//   return updatedUser;
-// };
 
 export const UserServices = {
   createUser,

@@ -11,11 +11,6 @@ const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await UserServices.createUser(req.body);
 
-    // res.status(httpStatus.CREATED).json({
-    //     message: "User Created Successfully",
-    //     user
-    // })
-
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
@@ -31,11 +26,6 @@ const getAllUsers = catchAsync(
     const result = await UserServices.getAllUsers(
       query as Record<string, string>
     );
-    // res.status(httpStatus.OK).json({
-    //     success: true,
-    //     message: "All Users Retrieved Successfully",
-    //     data: users
-    // })
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
