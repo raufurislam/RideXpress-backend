@@ -350,15 +350,33 @@ const rideHistory = async (userId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  // Fetch completed, cancelled, or rejected rides only
+  // Fetch all rides for the rider across all statuses
   const rides = await Ride.find({
     riderId: userId,
-    status: {
-      $in: [RideStatus.COMPLETED, RideStatus.CANCELLED, RideStatus.REJECTED],
-    },
-  }).sort({ "timestamps.completedAt": -1 }); // Optional: show most recent first
+  }).sort({ "timestamps.requestedAt": -1 });
 
   return rides;
+};
+
+const getRideById = async (userId: string, rideId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  const ride = await Ride.findById(rideId);
+  if (!ride) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ride not found");
+  }
+
+  if (ride.riderId.toString() !== userId) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "You are not authorized to view this ride"
+    );
+  }
+
+  return ride;
 };
 
 const viewEarningHistory = async (userId: string) => {
@@ -395,5 +413,6 @@ export const RideService = {
   updateRideStatus,
   cancelRide,
   rideHistory,
+  getRideById,
   viewEarningHistory,
 };

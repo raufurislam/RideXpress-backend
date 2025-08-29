@@ -8,13 +8,6 @@ import { createRideZodSchema } from "./ride.validation";
 
 const router = Router();
 
-// router.post(
-//   "/",
-//   checkAuth(Role.RIDER),
-//   validateRequest(createRideZodSchema),
-//   RideController.requestRide
-// );
-
 router.post(
   "/",
   checkAuth(Role.RIDER),
@@ -41,6 +34,12 @@ router.patch(
 );
 
 router.get("/rideHistory", checkAuth(Role.RIDER), RideController.rideHistory);
+
+router.get(
+  "/rideHistory/:rideId",
+  checkAuth(Role.RIDER),
+  RideController.getRideById
+);
 
 router.get(
   "/earnings",

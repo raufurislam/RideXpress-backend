@@ -100,7 +100,7 @@ const rideHistory = catchAsync(
     sendResponse(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Ride History has been retrieve successfully",
+      message: "Ride history retrieved successfully",
       data: result,
     });
   }
@@ -120,11 +120,25 @@ const viewEarningHistory = catchAsync(
   }
 );
 
+const getRideById = catchAsync(async (req: Request, res: Response) => {
+  const decodedToken = req.user as JwtPayload;
+  const { rideId } = req.params;
+  const result = await RideService.getRideById(decodedToken.userId, rideId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Ride retrieved successfully",
+    data: result,
+  });
+});
+
 export const RideController = {
   requestRide,
   getAllRides,
   updateRideStatus,
   cancelRide,
   rideHistory,
+  getRideById,
   viewEarningHistory,
 };
