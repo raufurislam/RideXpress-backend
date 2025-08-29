@@ -8,6 +8,13 @@ import { createRideZodSchema } from "./ride.validation";
 
 const router = Router();
 
+// router.post(
+//   "/",
+//   checkAuth(Role.RIDER),
+//   validateRequest(createRideZodSchema),
+//   RideController.requestRide
+// );
+
 router.post(
   "/",
   checkAuth(Role.RIDER),

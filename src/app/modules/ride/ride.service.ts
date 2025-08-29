@@ -1,7 +1,12 @@
 // ride.service.ts
 import { Types } from "mongoose";
 import { calculateFare } from "../../utils/calculateFare";
-import { IRide, RideStatus } from "./ride.interface";
+import {
+  IRide,
+  IRideLocation,
+  RideStatus,
+  VEHICLE_TYPE,
+} from "./ride.interface";
 import { Ride } from "./ride.model";
 import { calculateDistanceInKm } from "../../utils/calculateDistanceInKm";
 import { User } from "../user/user.model";
@@ -19,56 +24,79 @@ import { Driver } from "../driver/driver.model";
 import { cancelledRideToday } from "../../utils/cancelledRideToday";
 
 const requestRide = async (payload: Partial<IRide>, userId: string) => {
-  const isUserExist = await User.findById(userId);
-  if (!isUserExist) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  // Check if rider already has an active ride
-  const activeRide = await Ride.findOne({
-    riderId: userId,
-    status: { $in: ACTIVE_RIDE_STATUSES },
-  });
-
-  if (activeRide) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "You already have an active ride. Please complete it first."
-    );
-  }
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
   const { pickupLocation, destinationLocation, vehicleType } = payload;
 
-  if (!pickupLocation || !destinationLocation || !vehicleType) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Missing required ride fields");
+  if (!pickupLocation?.coordinates || !pickupLocation?.name)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Pickup location required with name"
+    );
+
+  if (!destinationLocation?.coordinates || !destinationLocation?.name)
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Destination location required with name"
+    );
+
+  if (!vehicleType)
+    throw new AppError(httpStatus.BAD_REQUEST, "Vehicle type required");
+
+  // Normalize and validate vehicle type from request
+  const normalizedVehicleType = String(vehicleType).toUpperCase();
+  if (
+    !Object.values(VEHICLE_TYPE).includes(normalizedVehicleType as VEHICLE_TYPE)
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Invalid vehicle type '${vehicleType}'. Allowed: ${Object.values(
+        VEHICLE_TYPE
+      ).join(", ")}`
+    );
   }
 
-  // Calculate distance and fare
-  const [pickupLng, pickupLat] = pickupLocation.coordinates;
-  const [destLng, destLat] = destinationLocation.coordinates;
+  // Correct GeoJSON order [lng, lat]
+  const pickup: IRideLocation = {
+    type: "Point",
+    coordinates: [pickupLocation.coordinates[1], pickupLocation.coordinates[0]],
+    name: pickupLocation.name,
+  };
+
+  const destination: IRideLocation = {
+    type: "Point",
+    coordinates: [
+      destinationLocation.coordinates[1],
+      destinationLocation.coordinates[0],
+    ],
+    name: destinationLocation.name,
+  };
 
   const distance = calculateDistanceInKm(
-    pickupLat,
-    pickupLng,
-    destLat,
-    destLng
+    pickup.coordinates[1],
+    pickup.coordinates[0],
+    destination.coordinates[1],
+    destination.coordinates[0]
   );
-  const fare = calculateFare(distance);
 
-  // Create ride
-  const ride = await Ride.create({
-    riderId: new Types.ObjectId(userId),
-    pickupLocation,
-    destinationLocation,
-    distance,
-    vehicleType,
-    fare,
-    status: RideStatus.REQUESTED,
-    timestamps: {
-      requestedAt: new Date(),
-    },
+  const fare = calculateFare({
+    distanceInKm: distance,
+    vehicleType: normalizedVehicleType as VEHICLE_TYPE,
   });
 
+  const ride = new Ride({
+    riderId: new Types.ObjectId(userId),
+    pickupLocation: pickup,
+    destinationLocation: destination,
+    distance,
+    fare,
+    vehicleType: normalizedVehicleType,
+    status: RideStatus.REQUESTED,
+    timestamps: { requestedAt: new Date() },
+  });
+
+  await ride.save();
   return ride;
 };
 

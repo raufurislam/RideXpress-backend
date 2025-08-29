@@ -7,20 +7,34 @@ import { sendResponse } from "../../utils/sendResponse";
 import { RideService } from "./ride.service";
 import { JwtPayload } from "jsonwebtoken";
 
-const requestRide = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const rideData = req.body;
-    const user = req.user as JwtPayload;
-    const result = await RideService.requestRide(rideData, user.userId);
+// const requestRide = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const rideData = req.body;
+//     const user = req.user as JwtPayload;
+//     const result = await RideService.requestRide(rideData, user.userId);
 
-    sendResponse(res, {
-      statusCode: httpStatus.CREATED,
-      success: true,
-      message: "Your ride request was successful",
-      data: result,
-    });
-  }
-);
+//     sendResponse(res, {
+//       statusCode: httpStatus.CREATED,
+//       success: true,
+//       message: "Your ride request was successful",
+//       data: result,
+//     });
+//   }
+// );
+
+const requestRide = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as JwtPayload;
+  const rideData = req.body;
+
+  const result = await RideService.requestRide(rideData, user.userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: "Ride requested successfully",
+    data: result,
+  });
+});
 
 const getAllRides = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
