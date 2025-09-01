@@ -150,7 +150,11 @@ const updateAvailability = async (
   availability: AVAILABILITY
 ) => {
   if (
-    ![AVAILABILITY.AVAILABLE, AVAILABILITY.UNAVAILABLE].includes(availability)
+    ![
+      AVAILABILITY.AVAILABLE,
+      AVAILABILITY.UNAVAILABLE,
+      AVAILABILITY.ON_TRIP,
+    ].includes(availability)
   ) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid availability change");
   }

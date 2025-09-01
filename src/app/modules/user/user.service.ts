@@ -64,7 +64,8 @@ const getSingleUser = async (id: string) => {
 };
 
 const getMe = async (userId: string) => {
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId);
+  // .select("-password");
   return {
     data: user,
   };

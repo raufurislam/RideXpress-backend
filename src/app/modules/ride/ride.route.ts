@@ -17,7 +17,7 @@ router.post(
 
 router.get(
   "/",
-  checkAuth(Role.ADMIN, Role.SUPER_ADMIN),
+  checkAuth(Role.ADMIN, Role.SUPER_ADMIN, Role.DRIVER),
   RideController.getAllRides
 );
 
