@@ -27,6 +27,19 @@ const requestRide = async (payload: Partial<IRide>, userId: string) => {
   const user = await User.findById(userId);
   if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
+  // ⛔ Block if rider already has an active ride
+  const existingRide = await Ride.findOne({
+    riderId: userId,
+    status: { $in: ACTIVE_RIDE_STATUSES },
+  });
+
+  if (existingRide) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You already have an active ride (${existingRide.status}). Please complete or cancel it before requesting a new one.`
+    );
+  }
+
   const { pickupLocation, destinationLocation, vehicleType } = payload;
 
   if (!pickupLocation?.coordinates || !pickupLocation?.name)
