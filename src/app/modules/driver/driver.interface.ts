@@ -27,3 +27,11 @@ export interface IDriver {
   approvedAt?: Date;
   earnings?: number;
 }
+
+export interface UpdateMyDriverProfile {
+  vehicleType?: VEHICLE_TYPE;
+  vehicleModel?: string;
+  vehicleNumber?: string;
+  licenseNumber?: string;
+  availability?: AVAILABILITY;
+}

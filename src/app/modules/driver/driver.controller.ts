@@ -6,6 +6,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import StatusCodes from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { DriverService } from "./driver.service";
+import { UpdateMyDriverProfile } from "./driver.interface";
 
 const applyForDriver = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -86,10 +87,27 @@ const getMyDriverProfile = catchAsync(
   }
 );
 
+const updateMyDriverProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+    const payload = req.body as UpdateMyDriverProfile;
+
+    const result = await DriverService.updateMyDriverProfile(user, payload);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Driver profile updated successfully",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
   updateAvailability,
   getMyDriverProfile,
+  updateMyDriverProfile,
 };

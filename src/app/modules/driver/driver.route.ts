@@ -7,6 +7,7 @@ import {
   driverApplicationZodSchema,
   updateAvailabilityZodSchema,
   updateDriverApplicationZodSchema,
+  updateMyDriverProfileZodSchema,
 } from "./driver.validation";
 import { DriverController } from "./driver.controller";
 
@@ -43,6 +44,13 @@ router.get(
   "/my-profile",
   checkAuth(Role.DRIVER),
   DriverController.getMyDriverProfile
+);
+
+router.patch(
+  "/update-my-profile",
+  checkAuth(Role.DRIVER),
+  validateRequest(updateMyDriverProfileZodSchema),
+  DriverController.updateMyDriverProfile
 );
 
 export const DriverRoute = router;

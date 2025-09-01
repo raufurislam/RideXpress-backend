@@ -5,7 +5,11 @@ import AppError from "../../errorHelpers/AppError";
 import { Driver } from "./driver.model";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model";
-import { AVAILABILITY, DRIVER_STATUS } from "./driver.interface";
+import {
+  AVAILABILITY,
+  DRIVER_STATUS,
+  UpdateMyDriverProfile,
+} from "./driver.interface";
 import { QueryBuilder } from "./../../utils/QueryBuilder";
 import { driverSearchableFields } from "./driver.constant";
 import mongoose from "mongoose";
@@ -190,10 +194,37 @@ const getMyDriverProfile = async (user: JwtPayload) => {
   return driver;
 };
 
+const updateMyDriverProfile = async (
+  user: JwtPayload,
+  payload: UpdateMyDriverProfile
+) => {
+  const driver = await Driver.findOne({ userId: user.userId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  if (payload.vehicleType) driver.vehicleType = payload.vehicleType;
+  if (payload.vehicleModel) driver.vehicleModel = payload.vehicleModel;
+  if (payload.vehicleNumber) driver.vehicleNumber = payload.vehicleNumber;
+  if (payload.licenseNumber) driver.licenseNumber = payload.licenseNumber;
+
+  if (payload.availability) {
+    if (!Object.values(AVAILABILITY).includes(payload.availability)) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid availability value");
+    }
+    driver.availability = payload.availability;
+  }
+
+  await driver.save();
+  return driver;
+};
+
 export const DriverService = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
   updateAvailability,
   getMyDriverProfile,
+  updateMyDriverProfile,
 };
