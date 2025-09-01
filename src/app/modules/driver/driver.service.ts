@@ -178,9 +178,22 @@ const updateAvailability = async (
   return driver;
 };
 
+const getMyDriverProfile = async (user: JwtPayload) => {
+  const driver = await Driver.findOne({ userId: user.userId }).populate(
+    "userId"
+  );
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  return driver;
+};
+
 export const DriverService = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
   updateAvailability,
+  getMyDriverProfile,
 };

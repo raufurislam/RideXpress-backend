@@ -39,4 +39,10 @@ router.patch(
   DriverController.updateAvailability
 );
 
+router.get(
+  "/my-profile",
+  checkAuth(Role.DRIVER),
+  DriverController.getMyDriverProfile
+);
+
 export const DriverRoute = router;

@@ -71,9 +71,25 @@ const updateAvailability = catchAsync(
   }
 );
 
+const getMyDriverProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+
+    const result = await DriverService.getMyDriverProfile(user);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Driver profile fetched successfully",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
   getAllDriverApplication,
   updateDriver,
   updateAvailability,
+  getMyDriverProfile,
 };
