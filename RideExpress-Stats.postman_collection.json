@@ -1,0 +1,193 @@
+{
+  "info": {
+    "name": "RideExpress Statistics API",
+    "description": "Comprehensive statistics and analytics endpoints for the RideExpress ride-sharing application. All endpoints require ADMIN or SUPER_ADMIN authentication.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{adminToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "YOUR_ADMIN_TOKEN_HERE",
+      "type": "string",
+      "description": "JWT token obtained after logging in as admin"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@rideexpress.com\",\n  \"password\": \"adminpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login to get admin authentication token. Copy the accessToken from response and set it as adminToken variable."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Statistics",
+      "item": [
+        {
+          "name": "Get Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["stats", "dashboard"]
+            },
+            "description": "Get an overview of all key metrics in a single request. Returns total users, rides, drivers, revenue, active rides, completed rides today, new users and drivers this week."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ride Statistics",
+      "item": [
+        {
+          "name": "Get Ride Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/rides",
+              "host": ["{{baseUrl}}"],
+              "path": ["stats", "rides"]
+            },
+            "description": "Get comprehensive ride analytics including counts, status distribution, performance metrics, distance analysis, fare analysis, time-based trends, popular locations, and ride duration statistics."
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Statistics",
+      "item": [
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["stats", "users"]
+            },
+            "description": "Get user analytics including role distribution, status counts, growth metrics, verification status, and user activity patterns."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Driver Statistics",
+      "item": [
+        {
+          "name": "Get Driver Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/drivers",
+              "host": ["{{baseUrl}}"],
+              "path": ["stats", "drivers"]
+            },
+            "description": "Get driver analytics including approval status, availability patterns, earnings distribution, performance metrics, and top earning drivers."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Revenue Statistics",
+      "item": [
+        {
+          "name": "Get Revenue Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats/revenue",
+              "host": ["{{baseUrl}}"],
+              "path": ["stats", "revenue"]
+            },
+            "description": "Get financial analytics including revenue trends, earnings by vehicle type, revenue by location, cancellation impact, and pending revenue analysis."
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Test script to validate statistics responses",
+          "if (pm.response.code === 200) {",
+          "    const response = pm.response.json();",
+          "    ",
+          "    // Check if response has required structure",
+          "    pm.test(\"Response has success property\", function () {",
+          "        pm.expect(response).to.have.property('success');",
+          "        pm.expect(response.success).to.be.true;",
+          "    });",
+          "    ",
+          "    pm.test(\"Response has message property\", function () {",
+          "        pm.expect(response).to.have.property('message');",
+          "        pm.expect(response.message).to.be.a('string');",
+          "    });",
+          "    ",
+          "    pm.test(\"Response has data property\", function () {",
+          "        pm.expect(response).to.have.property('data');",
+          "        pm.expect(response.data).to.be.an('object');",
+          "    });",
+          "    ",
+          "    // Store admin token if this is a login request",
+          "    if (pm.request.url.path.includes('/auth/login') && response.data && response.data.accessToken) {",
+          "        pm.collectionVariables.set('adminToken', response.data.accessToken);",
+          "        console.log('Admin token stored successfully');",
+          "    }",
+          "} else if (pm.response.code === 401) {",
+          "    pm.test(\"Unauthorized access\", function () {",
+          "        pm.expect(pm.response.code).to.equal(401);",
+          "    });",
+          "} else if (pm.response.code === 403) {",
+          "    pm.test(\"Forbidden access\", function () {",
+          "        pm.expect(pm.response.code).to.equal(403);",
+          "    });",
+          "}"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
