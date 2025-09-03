@@ -3,6 +3,18 @@ import { catchAsync } from "../../utils/catchAsync";
 import { StatsService } from "./stats.service";
 import { sendResponse } from "../../utils/sendResponse";
 
+const getPublicHomepageStats = catchAsync(
+  async (req: Request, res: Response) => {
+    const stats = await StatsService.getPublicHomepageStats();
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Public homepage stats fetched successfully",
+      data: stats,
+    });
+  }
+);
+
 const getRideStats = catchAsync(async (req: Request, res: Response) => {
   const stats = await StatsService.getRideStats();
   sendResponse(res, {
@@ -54,6 +66,7 @@ const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const StatsController = {
+  getPublicHomepageStats,
   getRideStats,
   getUserStats,
   getDriverStats,

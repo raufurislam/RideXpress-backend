@@ -3,7 +3,7 @@ import { Ride } from "../ride/ride.model";
 import { User } from "../user/user.model";
 import { Driver } from "../driver/driver.model";
 import { Role, IsActive } from "../user/user.interface";
-import { RideStatus } from "../ride/ride.interface";
+import { RideStatus, VEHICLE_TYPE } from "../ride/ride.interface";
 import { DRIVER_STATUS, AVAILABILITY } from "../driver/driver.interface";
 
 const now = new Date();
@@ -11,6 +11,36 @@ const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 const currentYear = new Date(now.getFullYear(), 0, 1);
+
+// Public, non-sensitive homepage stats (safe to expose without auth)
+const getPublicHomepageStats = async () => {
+  const [
+    totalCompletedRides,
+    totalApprovedDrivers,
+    totalRiders,
+    coverageLocationsCount,
+    topPickupLocations,
+  ] = await Promise.all([
+    Ride.countDocuments({ status: RideStatus.COMPLETED }),
+    Driver.countDocuments({ status: DRIVER_STATUS.APPROVED }),
+    User.countDocuments({ role: Role.RIDER }),
+    Ride.distinct("pickupLocation.name").then((names) => names.length),
+    Ride.aggregate([
+      { $group: { _id: "$pickupLocation.name", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 },
+    ]),
+  ]);
+
+  return {
+    totalCompletedRides,
+    totalApprovedDrivers,
+    totalRiders,
+    coverageLocationsCount,
+    vehicleTypesOffered: Object.values(VEHICLE_TYPE),
+    topPickupLocations,
+  };
+};
 
 // Dashboard Stats - Overview of all key metrics
 const getDashboardStats = async () => {
@@ -477,4 +507,5 @@ export const StatsService = {
   getUserStats,
   getDriverStats,
   getRevenueStats,
+  getPublicHomepageStats,
 };

@@ -5,6 +5,9 @@ import { StatsController } from "./stats.controller";
 
 const router = express.Router();
 
+// Public, unauthenticated homepage stats (safe aggregates only)
+router.get("/public", StatsController.getPublicHomepageStats);
+
 // Dashboard stats - overview of all key metrics
 router.get(
   "/dashboard",
