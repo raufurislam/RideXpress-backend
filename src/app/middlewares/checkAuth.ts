@@ -12,7 +12,8 @@ export const checkAuth =
   (...authRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const accessToken = req.headers.authorization || req.cookies.accessToken;
+      const authHeader = req.headers.authorization || req.cookies.accessToken;
+      const accessToken = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
 
       if (!accessToken) {
         throw new AppError(403, "No Token Recieved");

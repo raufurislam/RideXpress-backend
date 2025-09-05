@@ -53,4 +53,11 @@ router.patch(
   DriverController.updateMyDriverProfile
 );
 
+router.get(
+  "/my-ride-history",
+  checkAuth(Role.DRIVER),
+  DriverController.getDriverRideHistory
+);
+//
+
 export const DriverRoute = router;

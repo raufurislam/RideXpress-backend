@@ -13,6 +13,7 @@ import {
 import { QueryBuilder } from "./../../utils/QueryBuilder";
 import { driverSearchableFields } from "./driver.constant";
 import mongoose from "mongoose";
+import { Ride } from "../ride/ride.model";
 
 const applyForDriver = async (
   payload: Partial<IUser>,
@@ -220,6 +221,91 @@ const updateMyDriverProfile = async (
   return driver;
 };
 
+const getDriverRideHistory = async (
+  user: JwtPayload,
+  query: Record<string, string>
+) => {
+  // First verify the driver exists and is approved
+  const driver = await Driver.findOne({ userId: user.userId });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  if (driver.status !== DRIVER_STATUS.APPROVED) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Only approved drivers can view ride history"
+    );
+  }
+
+  // Create base query for rides where this driver was assigned
+  const baseQuery = { driverId: user.userId };
+
+  // Apply search filter if searchTerm is provided
+  let searchQuery = { ...baseQuery };
+  if (query.searchTerm) {
+    searchQuery = {
+      ...baseQuery,
+      $or: [
+        { "pickupLocation.name": { $regex: query.searchTerm, $options: "i" } },
+        {
+          "destinationLocation.name": {
+            $regex: query.searchTerm,
+            $options: "i",
+          },
+        },
+        { status: { $regex: query.searchTerm, $options: "i" } },
+      ],
+    };
+  }
+
+  // Apply additional filters from query parameters
+  const filterQuery = { ...searchQuery };
+  if (query.status) {
+    filterQuery.status = query.status;
+  }
+  if (query.vehicleType) {
+    filterQuery.vehicleType = query.vehicleType;
+  }
+
+  // Create query builder for rides where this driver was assigned
+  const rideQuery = Ride.find(filterQuery)
+    .populate("riderId", "name email phone")
+    .sort({ createdAt: -1 });
+
+  const queryBuilder = new QueryBuilder(rideQuery, query);
+
+  // Apply search, filter, sort, and pagination
+  const result = await queryBuilder
+    .search(["pickupLocation.name", "destinationLocation.name", "status"])
+    .filter()
+    .sort()
+    .fields()
+    .paginate();
+
+  // Get total count for the specific driver's rides with applied filters
+  const totalDocuments = await Ride.countDocuments(filterQuery);
+
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 5;
+  const totalPage = Math.ceil(totalDocuments / limit);
+
+  const meta = {
+    page,
+    limit,
+    total: totalDocuments,
+    totalPage,
+  };
+
+  const data = await result.build();
+
+  return {
+    data,
+    meta,
+  };
+};
+
 export const DriverService = {
   applyForDriver,
   getAllDriverApplication,
@@ -227,4 +313,5 @@ export const DriverService = {
   updateAvailability,
   getMyDriverProfile,
   updateMyDriverProfile,
+  getDriverRideHistory,
 };

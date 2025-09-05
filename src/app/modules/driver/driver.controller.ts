@@ -22,24 +22,6 @@ const applyForDriver = catchAsync(
   }
 );
 
-const getAllDriverApplication = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user as JwtPayload;
-    const query = req.query as Record<string, string>;
-
-    const result = await DriverService.getAllDriverApplication(
-      decodedToken.userId,
-      query
-    );
-    sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      success: true,
-      message: "Your application was successfully sent",
-      data: result,
-    });
-  }
-);
-
 const updateDriver = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { driverId } = req.params;
@@ -103,6 +85,38 @@ const updateMyDriverProfile = catchAsync(
   }
 );
 
+const getAllDriverApplication = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+    const query = req.query as Record<string, string>;
+
+    const result = await DriverService.getAllDriverApplication(user.userId, query);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Driver applications fetched successfully",
+      data: result,
+    });
+  }
+);
+
+const getDriverRideHistory = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayload;
+    const query = req.query as Record<string, string>;
+
+    const result = await DriverService.getDriverRideHistory(user, query);
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Driver ride history fetched successfully",
+      data: result,
+    });
+  }
+);
+
 export const DriverController = {
   applyForDriver,
   getAllDriverApplication,
@@ -110,4 +124,5 @@ export const DriverController = {
   updateAvailability,
   getMyDriverProfile,
   updateMyDriverProfile,
+  getDriverRideHistory,
 };
