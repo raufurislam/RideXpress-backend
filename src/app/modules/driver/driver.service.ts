@@ -240,10 +240,10 @@ const getDriverRideHistory = async (
   }
 
   // Create base query for rides where this driver was assigned
-  const baseQuery = { driverId: user.userId };
+  const baseQuery : Record<string, any>= { driverId: user.userId };
 
   // Apply search filter if searchTerm is provided
-  let searchQuery = { ...baseQuery };
+  let searchQuery: Record<string, any>  = { ...baseQuery };
   if (query.searchTerm) {
     searchQuery = {
       ...baseQuery,
@@ -257,7 +257,7 @@ const getDriverRideHistory = async (
         },
         { status: { $regex: query.searchTerm, $options: "i" } },
       ],
-    };
+    } as any;
   }
 
   // Apply additional filters from query parameters
